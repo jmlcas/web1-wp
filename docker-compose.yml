@@ -1,0 +1,47 @@
+version: '3.1'
+
+services:
+
+  wordpress:
+    container_name: web1  
+    image: wordpress
+    restart: unless-stopped
+    ports:
+      - "8000:80"
+    volumes:
+      - ./wordpress:/var/www/html 
+    env_file: .env
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD} 
+
+  db:
+    container_name: db-web1
+    image: mariadb
+    restart: unless-stopped
+    volumes:
+      - ./db:/var/lib/mysql 
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}  
+
+  phpmyadmin:
+    container_name: pma-web1
+    image: phpmyadmin/phpmyadmin
+    restart: unless-stopped 
+    ports:      
+      - "8080:80"              
+    depends_on:      
+      - db 
+    env_file: .env            
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      PMA_USER: ${MYSQL_USER}
+      PMA_PASSWORD: ${MYSQL_PASSWORD}    
+ 
+  
+ 
