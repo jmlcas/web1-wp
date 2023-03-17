@@ -7,7 +7,7 @@ services:
     image: wordpress
     restart: unless-stopped
     ports:
-      - "8000:80"
+      - "8100:80"
     volumes:
       - ./wordpress:/var/www/html 
     env_file: .env
